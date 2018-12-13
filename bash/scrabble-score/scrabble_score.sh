@@ -19,23 +19,23 @@ main () {
     fi
 
     local word ; word="$1"
-    local table=( "1:AEIOULNRST" "2:DG" "3:BCMP" "4:FHVWY" "5:K" "8:JX" "10:QZ" )
-    local tablelen=${#table[@]}
     local score=0
 
     # Check every $letter in the $word against the $table[] for points
     for ((i=0; i<${#word}; i++)); do
         local letter=${word:$i:1}
-        local points=0
-        # Look for the line in table[] containing the $letter
-        for ((j=0; j<$tablelen; j++)); do
-            local letterset=${table[$j]/#[0-9]*:/}
-            # Does the $letterset contain the (uppercased) current $letter of the word?
-            if [[ "$letterset" == *"${letter^^}"* ]]; then
-                points=${table[$j]/%:[A-Z]*/}
-            fi
-        done
-        score=$(( score + points ))
+
+        # Simple solution with case
+        case ${letter^^} in
+            [AEIOULNRST] ) ((score+=1)) ;;
+            [DG] ) ((score+=2)) ;;
+            [BCMP] ) ((score+=3)) ;;
+            [FHVWY] ) ((score+=4)) ;;
+            [K] ) ((score+=5)) ;;
+            [JX] ) ((score+=8)) ;;
+            [QZ] ) ((score+=10)) ;;
+            * ) ;;
+        esac
     done
 
     echo "${score}"
